@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Login1</string>
+    <string name="Hello">Hey there, </string>
+    <string name="create_account">Create Account</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="Email">Email </string>
+    <string name="Password">Password</string>
+    <string name="welcome_back">Welcome Back</string>
+    <string name="terms_and_conditions">By clicking the checkbox you are accepting the terms and condition</string>
+    <string name="menu">Menu</string>
+    <string name="logout">logout</string>
+    <string name="IDetect">IDetect</string>
+</resources>
