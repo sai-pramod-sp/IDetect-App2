@@ -4,6 +4,7 @@ import android.graphics.drawable.Icon
 import android.icu.text.CaseMap.Title
 import android.util.Log
 import android.widget.CheckBox
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -374,14 +375,16 @@ fun NavigationDrawerHeader(){
         modifier = Modifier
             .background(
                 Brush.horizontalGradient(
-                    listOf(Color.Gray, Color.DarkGray)
+                    listOf(Color.White, Color.White)
                 )
             )
             .fillMaxWidth()
-            .height(100.dp)
+            .height(150.dp),
+        contentAlignment = Alignment.Center
     ) {
         Spacer(modifier = Modifier.height(15.dp))
-        BoldTextComponents(value = stringResource(id = R.string.IDetect))
+        Image(painter = painterResource(id = R.drawable.eye), contentDescription = "image")
+        //BoldTextComponents(value = stringResource(id = R.string.IDetect))
     }
 }
 
@@ -412,7 +415,13 @@ fun NavigationItemRow(items: NavigationItems, navigationItemClicked:(NavigationI
 
         Spacer(modifier = Modifier.width(18.dp))
 
-        NavigationDrawerText(title = items.title)
+//        NavigationDrawerText(title = items.title)
+        Text(
+            text = items.title, style = TextStyle(
+                color = Color.Black,
+                fontSize = 18.sp,
+            )
+        )
 
     }
 }
@@ -425,7 +434,6 @@ fun NavigationDrawerText(title: String) {
         text = title, style = TextStyle(
             color = Color.Black,
             fontSize = 18.sp,
-            fontStyle = FontStyle.Normal,
             shadow = Shadow(
                 color = Color.Black,
                 offset = shadowOffset, 2f
