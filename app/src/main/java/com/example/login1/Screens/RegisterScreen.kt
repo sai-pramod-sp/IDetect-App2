@@ -36,6 +36,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.login1.Components.BoldTextComponents
@@ -137,9 +138,10 @@ fun RegisterScreen(
 
 }
 
-//@Preview(showBackground = true)
-//@Composable
-//fun new(){
+/*
+@Preview(showBackground = true)
+@Composable
+fun new(){
 //    LoginScreen(navController)
-////    LoginScreen(navController = NavController(this))
-//}
+    LoginScreen(navController = NavController(this))
+}*/

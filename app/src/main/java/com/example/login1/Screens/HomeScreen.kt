@@ -30,9 +30,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.login1.Components.AppBottomBar
 import com.example.login1.Components.AppTopBar
 import com.example.login1.Components.BoldTextComponents
-import com.example.login1.Components.NavigationDrawer
+//import com.example.login1.Components.NavigationDrawer
 import com.example.login1.Components.NavigationDrawerBody
 import com.example.login1.Components.NavigationDrawerHeader
 import com.example.login1.R
@@ -59,18 +60,7 @@ fun HomeScreen(
                 NavigationDrawerHeader()
                 NavigationDrawerBody(
                     navigationItems = viewModel.navigationItemsList,
-                    navigationItemClicked = {
-                        if(it.title == "Favourite") {
-                            navController.navigate(DrawerScreens.Favourites.route)
-                        }
-                        else if (it.title == "Home") navController.navigate(Screen.HomeScreen.route)
-                        else if (it.title == "Cart") navController.navigate(DrawerScreens.Cart.route)
-                        else if (it.title == "ImageDetect") navController.navigate(DrawerScreens.ImageDetect.route)
-                        else if (it.title == "Video Detect") navController.navigate(DrawerScreens.Video.route)
-                        else if (it.title == "LiveDetect") navController.navigate(DrawerScreens.Live.route)
-                        else if (it.title == "Settings") navController.navigate(DrawerScreens.Settings.route)
-                        else if (it.title == "Logout") navController.navigate(DrawerScreens.Logout.route)
-                    }
+                    navController
                 )
             }
         }
@@ -93,6 +83,9 @@ fun HomeScreen(
                         }
                     }
                 )
+            },
+            bottomBar = {
+                AppBottomBar(navController)
             }
         ){
 

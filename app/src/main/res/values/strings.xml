@@ -11,4 +11,7 @@
     <string name="menu">Menu</string>
     <string name="logout">logout</string>
     <string name="IDetect">IDetect</string>
+    <string name="imageDetect">Image Detection</string>
+    <string name="VideoDetect">Video Detection</string>
+    <string name="liveDetect">Live Detection</string>
 </resources>

@@ -35,7 +35,7 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             NavHost(
                 navController = navController,
-                startDestination = Screen.RegisterScreen.route
+                startDestination = DrawerScreens.ImageDetect.route
             ){
                 composable(route = Screen.RegisterScreen.route){
                     RegisterScreen(navController = navController)

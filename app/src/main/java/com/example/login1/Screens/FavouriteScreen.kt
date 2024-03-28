@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.login1.Components.AppBottomBar
 import com.example.login1.Components.AppTopBar
 import com.example.login1.Components.NavigationDrawerBody
 import com.example.login1.Components.NavigationDrawerHeader
@@ -45,20 +46,7 @@ fun FavouriteScreen(
 
                 NavigationDrawerHeader()
                 NavigationDrawerBody(
-                    navigationItems = viewModel.navigationItemsList,
-                    navigationItemClicked = {
-                        if(it.title == "Favourite") {
-                            navController.navigate(DrawerScreens.Favourites.route)
-                        }
-                        else if (it.title == "Home") navController.navigate(Screen.HomeScreen.route)
-                        else if (it.title == "Cart") navController.navigate(DrawerScreens.Cart.route)
-                        else if (it.title == "ImageDetect") navController.navigate(DrawerScreens.ImageDetect.route)
-                        else if (it.title == "Video Detect") navController.navigate(DrawerScreens.Video.route)
-                        else if (it.title == "LiveDetect") navController.navigate(DrawerScreens.Live.route)
-                        else if (it.title == "Settings") navController.navigate(DrawerScreens.Settings.route)
-                        else if (it.title == "Logout") navController.navigate(DrawerScreens.Logout.route)
-                    }
-                )
+                    navigationItems = viewModel.navigationItemsList, navController)
             }
         }
     ){
@@ -80,6 +68,9 @@ fun FavouriteScreen(
                         }
                     }
                 )
+            },
+            bottomBar = {
+                AppBottomBar(navController)
             }
         ){
 
