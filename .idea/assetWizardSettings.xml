@@ -18,7 +18,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="file:$USER_HOME$/Android/Sdk/icons/material/materialicons/live_tv/baseline_live_tv_24.xml" />
+                                      <entry key="url" value="file:$USER_HOME$/Android/Sdk/icons/material/materialicons/remove_red_eye/baseline_remove_red_eye_24.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -28,7 +28,7 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="baseline_live_tv_24" />
+                            <entry key="outputName" value="baseline_remove_red_eye_24" />
                           </map>
                         </option>
                       </PersistentState>

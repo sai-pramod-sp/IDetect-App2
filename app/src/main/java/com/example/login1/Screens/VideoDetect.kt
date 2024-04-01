@@ -43,7 +43,13 @@ fun videoScreen(
         }
     ){
 
-        DetectFragment(title = stringResource(id = R.string.VideoDetect), state = drawerState, drawable = R.drawable.baseline_video_camera_back_24, navController)
+        DetectFragment(title = stringResource(id = R.string.VideoDetect),
+            state = drawerState,
+            drawable = R.drawable.baseline_video_camera_back_24,
+            navController,
+            viewModelClicked = {
+
+            })
 
     }
 

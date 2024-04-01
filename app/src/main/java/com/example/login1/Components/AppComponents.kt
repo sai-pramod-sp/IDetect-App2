@@ -2,7 +2,13 @@ package com.example.login1.Components
 
 import android.annotation.SuppressLint
 import android.graphics.drawable.Icon
+import android.net.Uri
+import android.content.Context
+import android.util.Log
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -49,9 +55,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -77,11 +87,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
 import com.example.login1.R
 import com.example.login1.Screens.DrawerScreens
 import com.example.login1.Screens.Screen
 import com.example.login1.Utils.NavigationItems
 import kotlinx.coroutines.launch
+
 
 @Composable
 fun NormalTextComponents(value: String){
@@ -356,7 +369,7 @@ fun AppTopBar(toolbarTitle: String,
     TopAppBar(
         title = {
             Text(text = toolbarTitle,
-                color = Color.White
+                color = Color.Green
             )
         },
         navigationIcon = {
@@ -365,7 +378,7 @@ fun AppTopBar(toolbarTitle: String,
             ) {
                 Icon(imageVector = Icons.Filled.Menu,
                     contentDescription = stringResource(R.string.menu),
-                    tint = Color.White)
+                    tint = Color.Green)
             }
 
         },
@@ -375,7 +388,7 @@ fun AppTopBar(toolbarTitle: String,
             ) {
                 Icon(imageVector = Icons.Filled.Logout,
                     contentDescription = stringResource(R.string.logout),
-                    tint = Color.White)
+                    tint = Color.Green)
             }
 
         },
@@ -389,81 +402,81 @@ fun AppBottomBar(navController: NavController){
 //    val navigationController = rememberNavController()
     val context = LocalContext.current.applicationContext
     val selected = remember{
-        mutableStateOf(Icons.Default.Home)
+        mutableIntStateOf(0)
     }
 
+    BottomAppBar(
+        containerColor = Color.Blue
+    ) {
+        IconButton(
+            onClick = {
+                selected.intValue = 1
+                navController.navigate(Screen.HomeScreen.route){
+                    popUpTo(0)
+                }
+            }, modifier = Modifier.weight(1f)
+        ) {
+            Icon(imageVector = Icons.Default.Home,
+                contentDescription = "None",
+                modifier = Modifier.size(26.dp),
+                tint = if (selected.intValue == 1) Color.White else Color.Green)
+        }
+        IconButton(
+            onClick = {
+                selected.intValue = 2
+                navController.navigate(DrawerScreens.Favourites.route){
+                    popUpTo(0)
+                }
+            }, modifier = Modifier.weight(1f)
+        ) {
+            Icon(imageVector = Icons.Default.Search,
+                contentDescription = "None",
+                modifier = Modifier.size(26.dp),
+                tint = if (selected.intValue == 2) Color.White else Color.Green)
+        }
 
-            BottomAppBar(
-                containerColor = Color.Blue
+        Box(
+            modifier = Modifier
+                .weight(1f)
+                .padding(16.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            FloatingActionButton(
+                onClick = {
+                    Toast.makeText(context, "Open BOx", Toast.LENGTH_LONG).show()
+                }
             ) {
-                IconButton(
-                    onClick = {
-                        selected.value = Icons.Default.Home
-                        navController.navigate(Screen.HomeScreen.route){
-                            popUpTo(0)
-                        }
-                    }, modifier = Modifier.weight(1f)
-                ) {
-                    Icon(imageVector = Icons.Default.Home,
-                        contentDescription = "None",
-                        modifier = Modifier.size(26.dp),
-                        tint = if (selected.value == Icons.Default.Home) Color.White else Color.Green)
-                }
-                IconButton(
-                    onClick = {
-                        selected.value = Icons.Default.Search
-                        navController.navigate(DrawerScreens.Favourites.route){
-                            popUpTo(0)
-                        }
-                    }, modifier = Modifier.weight(1f)
-                ) {
-                    Icon(imageVector = Icons.Default.Search,
-                        contentDescription = "None",
-                        modifier = Modifier.size(26.dp),
-                        tint = if (selected.value == Icons.Default.Search) Color.White else Color.Green)
-                }
-
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(16.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    FloatingActionButton(
-                        onClick = {
-                            Toast.makeText(context, "Open BOx", Toast.LENGTH_LONG).show()
-                        }
-                    ) {
-                        Icon(imageVector = Icons.Default.Add, contentDescription = "None")
-                    }
-                }
-                IconButton(
-                    onClick = {
-                        selected.value = Icons.Default.ShoppingCart
-                        navController.navigate(DrawerScreens.Cart.route){
-                            popUpTo(0)
-                        }
-                    }, modifier = Modifier.weight(1f)
-                ) {
-                    Icon(imageVector = Icons.Default.ShoppingCart,
-                        contentDescription = "None",
-                        modifier = Modifier.size(26.dp),
-                        tint = if (selected.value == Icons.Default.ShoppingCart) Color.White else Color.Green)
-                }
-                IconButton(
-                    onClick = {
-                        selected.value = Icons.Default.Person
-                        navController.navigate(DrawerScreens.Settings.route){
-                            popUpTo(0)
-                        }
-                    }, modifier = Modifier.weight(1f)
-                ) {
-                    Icon(imageVector = Icons.Default.Person,
-                        contentDescription = "None",
-                        modifier = Modifier.size(26.dp),
-                        tint = if (selected.value == Icons.Default.Person) Color.White else Color.Green)
-                }
+                Icon(imageVector = Icons.Default.Add, contentDescription = "None")
             }
+        }
+        IconButton(
+            onClick = {
+                selected.intValue = 3
+                navController.navigate(DrawerScreens.Cart.route){
+                    popUpTo(0)
+                }
+            }, modifier = Modifier.weight(1f)
+        ) {
+            Icon(imageVector = Icons.Default.ShoppingCart,
+                contentDescription = "None",
+                modifier = Modifier.size(26.dp),
+                tint = if (selected.intValue == 3) Color.White else Color.Green)
+        }
+        IconButton(
+            onClick = {
+                selected.intValue = 4
+                navController.navigate(DrawerScreens.Settings.route){
+                    popUpTo(0)
+                }
+            }, modifier = Modifier.weight(1f)
+        ) {
+            Icon(imageVector = Icons.Default.Person,
+                contentDescription = "None",
+                modifier = Modifier.size(26.dp),
+                tint = if (selected.intValue == 4) Color.White else Color.Green)
+        }
+    }
+
 
 }
 
@@ -476,7 +489,7 @@ fun NavigationDrawerHeader(){
                     listOf(Color.White, Color.White)
                 )
             )
-            .fillMaxWidth()
+            .fillMaxWidth(40F)
             .height(150.dp),
         contentAlignment = Alignment.Center
     ) {
@@ -555,9 +568,38 @@ fun NavigationDrawerText(title: String) {
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun DetectFragment(title: String, state: DrawerState, drawable: Int, navController: NavController){
+fun DetectFragment(title: String, state: DrawerState, drawable: Int, navController: NavController, viewModelClicked: () -> Unit){
 
     val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current.applicationContext
+
+
+    var itemType by remember{
+        mutableIntStateOf(0)
+    }
+
+    itemType = when (title) {
+        "Image Detection" -> 1
+        "Video Detection" -> 2
+        else -> 3
+        }
+
+    var defaultImageUriImage: Uri = when (title){
+        "Image Detection" -> Uri.parse("android.resource://${context.packageName}/${R.drawable.baseline_image_search_24}")
+        "Video Detection" -> Uri.parse("android.resource://${context.packageName}/${R.drawable.baseline_video_camera_back_24}")
+        else -> Uri.parse("android.resource://${context.packageName}/${R.drawable.baseline_live_tv_24}")
+    }
+
+    var selectedImageUri by remember {
+        mutableStateOf<Uri?>(defaultImageUriImage)
+    }
+
+
+    val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
+
+        contract = ActivityResultContracts.PickVisualMedia(),
+        onResult = { uri -> selectedImageUri = uri }
+    )
 
     Scaffold(
         modifier = Modifier
@@ -595,14 +637,19 @@ fun DetectFragment(title: String, state: DrawerState, drawable: Int, navControll
                     fontWeight = FontWeight.Bold
                 )
             )
-            Image(painter = painterResource(id = drawable),
-                contentDescription = "Image",
-                contentScale = ContentScale.Fit,
-                modifier = Modifier.size(200.dp))
+            AsyncImage(
+                model = selectedImageUri,
+                contentDescription = null,
+                modifier = Modifier.size(200.dp),
+                contentScale = ContentScale.Crop)
             Spacer(modifier = Modifier.heightIn(10.dp))
             Row {
                 Button(
-                    onClick = { /*TODO*/ },
+                    onClick = {
+                              singlePhotoPickerLauncher.launch(
+                                  PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                              )
+                    },
                 ){
                     Box(
                         modifier = Modifier

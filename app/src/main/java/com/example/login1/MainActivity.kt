@@ -1,12 +1,18 @@
 package com.example.login1
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentManager
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -29,8 +35,17 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
+    val permissionRequest: MutableList<String> = ArrayList()
+
+    private var isreadmediaaudio = false
+    private var isreadmediavideo = false
+    private var isreadmediaimages = false
+    private var iscamera = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        grantruntimepermission()
         setContent {
             val navController = rememberNavController()
             NavHost(
@@ -75,6 +90,42 @@ class MainActivity : ComponentActivity() {
 
             }
         }
+    }
+
+    fun grantruntimepermission(){
+
+        permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()){ permission ->
+
+            isreadmediaaudio = permission[Manifest.permission.READ_MEDIA_AUDIO] ?: isreadmediaaudio
+            isreadmediavideo = permission[Manifest.permission.READ_MEDIA_VIDEO] ?: isreadmediavideo
+            isreadmediaimages = permission[Manifest.permission.READ_MEDIA_IMAGES] ?: isreadmediaimages
+            iscamera = permission[Manifest.permission.CAMERA] ?: iscamera
+
+        }
+
+        isreadmediaaudio = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_MEDIA_AUDIO) == PackageManager.PERMISSION_GRANTED
+        isreadmediavideo = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_MEDIA_VIDEO) == PackageManager.PERMISSION_GRANTED
+        isreadmediaimages = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED
+        iscamera = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
+
+        if(!iscamera){
+            permissionRequest.add(Manifest.permission.CAMERA)
+        }
+        if(!isreadmediaaudio){
+            permissionRequest.add(Manifest.permission.READ_MEDIA_AUDIO)
+        }
+        if(!isreadmediavideo){
+            permissionRequest.add(Manifest.permission.READ_MEDIA_VIDEO)
+        }
+        if(!isreadmediaimages){
+            permissionRequest.add(Manifest.permission.READ_MEDIA_IMAGES)
+        }
+
+        if(permissionRequest.isNotEmpty()){
+            permissionLauncher.launch(permissionRequest.toTypedArray())
+        }
+
+
     }
 
 }

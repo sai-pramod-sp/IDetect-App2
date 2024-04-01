@@ -44,7 +44,13 @@ fun LiveScreen(
     ){
 
 
-        DetectFragment(title = stringResource(id = R.string.liveDetect), state = drawerState, drawable = R.drawable.baseline_live_tv_24, navController)
+        DetectFragment(title = stringResource(id = R.string.liveDetect),
+            state = drawerState,
+            drawable = R.drawable.baseline_live_tv_24,
+            navController,
+            viewModelClicked = {
+
+            })
 
     }
 

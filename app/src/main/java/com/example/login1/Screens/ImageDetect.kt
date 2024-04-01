@@ -18,13 +18,14 @@ import com.example.login1.Components.NavigationDrawerHeader
 import com.example.login1.Components.DetectFragment
 import com.example.login1.R
 import com.example.login1.Utils.HomeViewModel
+import com.example.login1.Utils.ViewModels.ImageDetectViewModle
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ImageScreen(
     navController: NavController,
-    viewModel: HomeViewModel = hiltViewModel()
+    viewModel: ImageDetectViewModle = hiltViewModel()
 ){
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -43,7 +44,14 @@ fun ImageScreen(
         }
     ){
         
-        DetectFragment(title = stringResource(id = R.string.imageDetect), drawerState, drawable = R.drawable.baseline_image_search_24, navController)
+        DetectFragment(
+            title = stringResource(id = R.string.imageDetect),
+            drawerState,
+            drawable = R.drawable.baseline_image_search_24,
+            navController,
+            viewModelClicked = {
+
+            })
 
     }
 
