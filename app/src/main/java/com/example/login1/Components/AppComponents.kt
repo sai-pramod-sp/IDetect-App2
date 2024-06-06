@@ -1,10 +1,9 @@
 package com.example.login1.Components
 
 import android.annotation.SuppressLint
-import android.graphics.drawable.Icon
 import android.net.Uri
 import android.content.Context
-import android.util.Log
+import android.content.pm.PackageManager
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -40,7 +39,6 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 //import androidx.compose.material3.AlertDialogDefaults.containerColor
 import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.BottomAppBarDefaults.containerColor
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Divider
@@ -60,7 +58,6 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -85,15 +82,20 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
-import coil.compose.rememberAsyncImagePainter
+import android.Manifest
+import androidx.core.content.FileProvider
 import com.example.login1.R
 import com.example.login1.Screens.DrawerScreens
 import com.example.login1.Screens.Screen
 import com.example.login1.Utils.NavigationItems
 import kotlinx.coroutines.launch
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Objects
 
 
 @Composable
@@ -565,13 +567,31 @@ fun NavigationDrawerText(title: String) {
     )
 }
 
+@SuppressLint("SimpleDateFormat")
+fun Context.createImageFile(): File {
+    // Create an image file name
+    val timeStamp = SimpleDateFormat("yyyyMMdd_HHmm ss").format(Date())
+    val imageFileName = "JPEG_" + timeStamp + "_"
+    return File.createTempFile(
+        imageFileName, /* prefix */
+        ".jpg", /* suffix */
+        externalCacheDir     /* directory */
+    )
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun DetectFragment(title: String, state: DrawerState, drawable: Int, navController: NavController, viewModelClicked: () -> Unit){
 
     val coroutineScope = rememberCoroutineScope()
-    val context = LocalContext.current.applicationContext
+    val context = LocalContext.current
+    val photoFile: File = context.createImageFile()
+    val permissionState = remember{ mutableStateOf(false) }
+    val uri = FileProvider.getUriForFile(
+        Objects.requireNonNull(context),
+        context.packageName + ".provider", photoFile
+    )
 
 
     var itemType by remember{
@@ -600,6 +620,26 @@ fun DetectFragment(title: String, state: DrawerState, drawable: Int, navControll
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = { uri -> selectedImageUri = uri }
     )
+
+    val cameraLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.TakePicture()){
+        selectedImageUri = uri
+    }
+    val permissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) {
+        if (it) {
+            Toast.makeText(context, "Permission Granted", Toast.LENGTH_SHORT).show()
+            cameraLauncher.launch(uri)
+        } else {
+            Toast.makeText(context, "Permission Denied", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+
+    if (selectedImageUri == null){
+        selectedImageUri = defaultImageUriImage
+    }
 
     Scaffold(
         modifier = Modifier
@@ -663,7 +703,15 @@ fun DetectFragment(title: String, state: DrawerState, drawable: Int, navControll
                 }
                 Spacer(modifier = Modifier.width(80.dp))
                 Button(
-                    onClick = { /*TODO*/ },
+                    onClick = {
+                        if(ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
+                            == PackageManager.PERMISSION_GRANTED){
+                            permissionState.value = true
+                            cameraLauncher.launch(uri)
+                        }else{
+                            permissionLauncher.launch(Manifest.permission.CAMERA)
+                        }
+                    },
                 ){
                     Box(
                         modifier = Modifier
@@ -675,6 +723,19 @@ fun DetectFragment(title: String, state: DrawerState, drawable: Int, navControll
                     }
 
                 }
+            }
+            Spacer(modifier = Modifier.weight(1f))
+            FloatingActionButton(
+                onClick = { /*TODO*/ },
+                modifier = Modifier
+                    .align(Alignment.End),
+                containerColor = Color.Green
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = "Search"
+                )
+
             }
         }
 
